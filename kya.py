@@ -1,23 +1,43 @@
-import logging  
-import streamlit as st  # Make sure to import Streamlit  
+import streamlit as st
+import streamlit.components.v1 as components
+import os
+import time as t
+from translate import Translator
+import pandas as pd
+from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.svm import SVC
+from sklearn.cluster import KMeans
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.preprocessing import LabelEncoder
+from imblearn.over_sampling import SMOTE
+import numpy as np
+from PIL import Image
+import logging
+import sqlite3
+from hashlib import sha256
 
-# Set logging level to CRITICAL for the entire app  
-logging.basicConfig(level=logging.CRITICAL)  
+# Suppress Streamlit warnings
+logging.getLogger("streamlit.runtime.scriptrunner.script_runner").setLevel(logging.CRITICAL)
 
-# Set page configuration at the top  
-st.set_page_config(layout="wide")  
 
-# Initialize session state variables  
-if "logged_in" not in st.session_state:  
-    st.session_state.logged_in = False  
-if "username" not in st.session_state:  
-    st.session_state.username = ""  
-if "prediction" not in st.session_state:  # Initialize prediction  
-    st.session_state.prediction = None  
-if "prediction_made" not in st.session_state:  # Initialize prediction_made  
-    st.session_state.prediction_made = False  
+# Set page configuration at the top
+st.set_page_config(layout="wide")
 
-# Your other Streamlit code goes here...
+
+
+
+# Initialize session state variables
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+if "username" not in st.session_state:
+    st.session_state.username = ""
+if "prediction" not in st.session_state:  # Initialize prediction
+    st.session_state.prediction = None
+if "prediction_made" not in st.session_state:  # Initialize prediction_made
+    st.session_state.prediction_made = False
+
 # Database setup
 def init_db():
     conn = sqlite3.connect("users.db")
@@ -92,6 +112,7 @@ if not st.session_state.get("logged_in"):
                 try:
                     add_user(username_input, password_input)
                     st.sidebar.success("Account created successfully! Please log in.")
+                    st.sidebar.success("click the > for signup.")
                 except sqlite3.IntegrityError:
                     st.sidebar.error("Username already exists. Please choose a different username.")
             else:
