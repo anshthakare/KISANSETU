@@ -1,23 +1,23 @@
-# Suppress Streamlit warnings
-logging.getLogger("streamlit.runtime.scriptrunner.script_runner").setLevel(logging.CRITICAL)
+import logging  
+import streamlit as st  # Make sure to import Streamlit  
 
+# Set logging level to CRITICAL for the entire app  
+logging.basicConfig(level=logging.CRITICAL)  
 
-# Set page configuration at the top
-st.set_page_config(layout="wide")
+# Set page configuration at the top  
+st.set_page_config(layout="wide")  
 
+# Initialize session state variables  
+if "logged_in" not in st.session_state:  
+    st.session_state.logged_in = False  
+if "username" not in st.session_state:  
+    st.session_state.username = ""  
+if "prediction" not in st.session_state:  # Initialize prediction  
+    st.session_state.prediction = None  
+if "prediction_made" not in st.session_state:  # Initialize prediction_made  
+    st.session_state.prediction_made = False  
 
-
-
-# Initialize session state variables
-if "logged_in" not in st.session_state:
-    st.session_state.logged_in = False
-if "username" not in st.session_state:
-    st.session_state.username = ""
-if "prediction" not in st.session_state:  # Initialize prediction
-    st.session_state.prediction = None
-if "prediction_made" not in st.session_state:  # Initialize prediction_made
-    st.session_state.prediction_made = False
-
+# Your other Streamlit code goes here...
 # Database setup
 def init_db():
     conn = sqlite3.connect("users.db")
